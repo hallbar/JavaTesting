@@ -1,0 +1,118 @@
+Title:	Dealer Hand Returns Incorrectly
+
+Class:	Serious Bug
+e.g. "Feature Request", "System Error", "Serious Bug"
+
+Date:	November 1, 2016
+Reported By:   Barry Hall
+Email:  hallbar@oregonstate.edu
+
+
+Product:  Dealer 			    Version:
+Platform:                       Version:
+Browser:                        Version:
+URL:        
+
+Is it reproducible: Yes
+
+Description
+===========
+When the dealer dealt a card to itself, the size of dealerHand remained zero.
+The "hand" that was returned from the Dealer class was the deck in its current
+state.
+
+The function to deal the card to the dealer, which is listed below, worked fine
+
+	public void dealCard(CommonAction toPlayer) {
+		Card c = this.dealCardFromDeck(true);
+		toPlayer.acceptCard(c);
+	}
+
+The problem was contained within acceptCard in the dealer class as shown below:
+	public void acceptCard(Card c) {
+		deck.add(c);
+	}
+
+The card was being returned to the deck instead of being put in the dealer's
+hand, so the dealer deck always remained empty.
+
+To fix this, a simple change was made to acceptCard(Card c)
+
+-m "Changes deck.add to dealerHand.add"
+	public void acceptCard(Card c) {
+		dealerHand.add(c);
+	}
+
+With this change, the card is being accepted by the dealer and being placed
+into the dealer's hand instead of back into the deck.
+
+The getHand() function of the Dealer class was also involved in this bug because
+it returned the deck instead of returning the dealer's hand, so it was changed
+from:
+
+	public List<Card> getHand() {
+		return this.deck;
+	}
+
+to:
+	public List<Card> getHand() {
+		return this.dealerHand;
+	}
+
+
+Steps to Produce/Reproduce
+--------------------------
+The following test:
+
+	@Test
+    public void testDealerHandSize() {
+    	Dealer dealer = new Dealer();
+    	List<Card> dealerHand = new ArrayList<Card>();
+
+    	dealerHand = dealer.getHand();
+
+    	assertEquals(0, dealerHand.size());
+
+    	dealer.dealCard(dealer);
+    	dealer.dealCard(dealer);
+
+    	dealerHand = dealer.getHand();
+
+    	assertEquals(2, dealerHand.size());
+    }
+would fail on the original code of the Dealer class because it would return 52
+both times the assertEquals statement evaluated because of the faulty getHand()
+function which returned the deck.  The first time it was evaluated, no cards 
+had been dealt, so the deck was full.  The second time it was evaluated, the 
+deck was full even though two cards had been dealt to the dealer because these
+cards were returned to the deck instead of placed in the dealer's hand.
+
+After the changes made in the description section of this report, the size of
+the dealer's hand before any cards are dealt is zero.  After two cards are dealt
+to the dealer, the size of the hand is two.
+
+Expected Results
+----------------
+It is expected that the dealer's hand as returned by getHand() is zero before
+any cards have been dealt.  After two cards have been dealt to the dealer, it
+is expected that the size of the dealer's hand is two.
+
+Actual Results
+--------------
+The size of the dealer's hand as returned by getHand() was 52 before any cards
+were dealt.  After two cards were dealt to the dealer, the size of the hand 
+returned by getHand() was still 52.
+
+Workarounds
+-----------
+None
+
+
+Attachments
+-----------
+VerifiedTest.java
+
+
+Other Information
+-----------------
+Tested with Mockito and Maven

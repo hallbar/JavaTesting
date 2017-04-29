@@ -1,0 +1,14 @@
+last
+An error is thrown for all inputs except for null because the for loop decrements i which tests for arr[-1] on the second run through the loop which is an error that the array index (-1) is out of bounds.
+Since the if statement to check for null is before the for loop, null is the only input that does not try to use the for loop.
+
+lastZero
+An error called the NullPointerException is thrown if the input is null.
+If the only zero is in index 0, then -1 is returned when 0 should be returned.
+
+positive
+The NullPointerException is thrown if the input is null.
+
+oddOrPos
+The NullPointerException is thrown if the input is null.
+The incorrect value of 0 is returned for an array of {-1, -2, -3, -4, -5} but it should be 3 because -1, -3, and -5 are odd numbers.  The method does not properly identify odd negative numbers.

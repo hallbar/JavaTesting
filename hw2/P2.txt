@@ -1,0 +1,37 @@
+1.  The bug is that if the CardCollection is bigger than a standard deck, such
+as two decks together, then a card discarded beyond the size of a single deck
+will be discarded from the first deck instead of from its given position.  If
+the standard size of a deck is 52 cards, then the start of the second deck will
+be at position 52 for a zero indexed list.  If this card is discarded as in the
+test code below, then it will actually discard the card in position 0 instead.
+The card in position 51 should still be the card before the one discarded but
+due to the wrong card being removed from the deck, the card in that position
+after the discard is the card that was originally at position 52.
+
+@Test public void testDoubleDeckDiscard() {
+		ArrayList<Card> singleControl= Card.newDeck();
+
+		CardCollection doubleDeck = new CardCollection();
+	
+		doubleDeck.add(Card.newDeck());
+		doubleDeck.add(Card.newDeck());
+
+		doubleDeck.discardCard(52);
+		
+		// check card before discarded card and card replacing discarded card
+		// card 51 is the card before the one discarded
+		assertEquals(true, singleControl.get(51).equals(doubleDeck3.getCards().get(51)));
+		// the card in the first position of the second deck should be the same as the
+		// card in the second position of the control deck
+		assertEquals(true, singleControl.get(1).equals(doubleDeck3.getCards().get(52)));
+	}
+
+2.  If cards are always drawn from the top, if the size of the deck was greater
+than the size of a single deck, then the card at the top would remain at the top
+while the ones below it would be removed.
+If the player's hand were bigger than the size of a single deck, then the bug
+would be present.
+If the deck is bigger than the size of a single deck, then the bug would still
+be present even if the card removed were added back because the add function
+places the card after the last position of the deck.
+there while all of the cards below it 

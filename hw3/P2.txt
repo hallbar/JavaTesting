@@ -1,0 +1,23 @@
+1.  We do not need to consider a partition where CardCollection.cards is null
+because it is initialized to a protected List<Card> when a new CardCollection
+is created.
+
+Yes, everypossible state of CardCollection.cards, empty, one deck, and multiple
+decks, is considered in at least one partition.
+
+Every possible value of handPos is in at least one partition.
+
+The partitioning could use scenarios where it is at the end of the first deck,
+at the beginning of the second deck, and a card in the middle of each deck.
+Right now, each of these positions falls under b6 which would need to be split
+into four new partitions to meet the criteria stated.
+
+2.  The current implementation fails for b5 because that card would not be
+discarded.  Instead, the card at the end of the first deck would be the one
+discarded.
+
+3.  If the test passes for i=1 and fails for i=2, then partition b6 would cover
+both scenarios even though one passes and one fails.  Since this partition has
+both 1 and 2 in it, a test using only 1 which fits the criteria would not find
+the bug so it would need to be at least two partitions, one containing 1 and one
+containing 2.

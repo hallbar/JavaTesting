@@ -1,0 +1,91 @@
+Title:	Dealer Initial Deal Wrong Number of Cards
+
+Class:	Serious Bug
+e.g. "Feature Request", "System Error", "Serious Bug"
+
+Date:	10/31/2016
+Reported By:	Barry Hall
+Email:	hallbar@oregonstate.edu
+
+
+Product: Simple Blackjack       Version:
+Platform:                       Version:
+Browser:                        Version:
+URL:        
+
+Is it reproducible: Yes
+
+Description
+===========
+If a round is played with three players, the dealer is dealt three cards for
+the initial hand.  If there is only one player, the dealer is dealt only one
+card.
+
+The code causing the bug is:
+
+	for(PlayerAction p: players ){
+		dealer.dealCard(dealer);
+		dealer.dealCard(p);
+	}
+
+Changing the code so that it loops twice for the dealer will fix it so that
+the dealer is given exactly two cards at the start of the round.
+
+-m "Edits loop for dealCard"
+	for(int i = 0; i < 2; i++) {
+		dealer.dealCard(dealer);
+	}
+
+
+Steps to Produce/Reproduce
+--------------------------
+For the following code:
+
+	SimpleBlackjack j1 = new SimpleBlackjack(dt, new PlayerAction[]{p1});
+	j1.playRound();
+
+	verify(dt, times(2)).dealCard(dt);
+
+The number of times that a dealer should deal the card to itself is 2
+but only one card is dealt to the dealer.
+
+For the following code:
+
+	SimpleBlackjack j3 = new SimpleBlackjack(dt, new PlayerAction[]{p1, p2, p3});
+   	j3.playRound();
+
+   	verify(dt, times(2)).dealCard(dt)
+
+The number of times that a dealer should deal the card to itself is 2
+but three cards are dealt to the dealer.
+
+The dealer deals one card to itself for every player that is in the game.
+
+
+Expected Results
+----------------
+Under the version of Blackjack where the dealer has a "hole card", then there
+should be only two cards dealt to the dealer for any number of players.
+
+
+Actual Results
+--------------
+For a game with one player, the dealer is dealt one card which is one too few.
+For a game with three players, the dealer is dealt three cards which is one too
+many.
+
+
+Workarounds
+-----------
+None
+
+
+Attachments
+-----------
+SimpleBlackjackTest.java
+
+
+Other Information
+-----------------
+Tested with Mockito and maven
+

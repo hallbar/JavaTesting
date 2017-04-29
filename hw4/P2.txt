@@ -1,0 +1,23 @@
+1.  In SimpleBlackjack on line 31 the statement if(dealer.isInsuranceAvailable())
+has a hit counter of 1 but it is red.  The statements inside of the if clause are
+red and have a count of zero, so the condition dealer.isInsuranceAvailable() was 
+false at the time that line 31 was reached.
+
+2.  Java interfaces are always marked with N/A because they do not actually do 
+any work.  For example, PlayerAction has an enum which does get line coverage 
+but the other parts of it just state what needs to be present in a child class 
+of this type of interface.  The Player class will implement this interface and 
+actually be able to be tested.
+
+3.  A functional test like testBasicFunctionality only checks to see if the program 
+works for a limited situation with a known expectation.  It does not try to force 
+the code to do something unexpected.  It is not covering many of the aspects of the 
+code in the program.
+
+4.  The relationship between if/else if/else statements and the number of branches 
+depends on the way the statement is structured.  For a simple if statement, then 
+there are two branches, one for it being true and one for it being false.  For an 
+if/else if statement, the number of branches is three, one for the if being true, 
+one for the else if being true and one for neither being true.  If an else statement 
+is present, then takes the place of the false branches in the previous two examples.
+That is to say if/else is two branches and if/else if/else is three branches.

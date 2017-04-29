@@ -1,0 +1,41 @@
+1. True
+
+2. False
+
+3. False.  If the code has an if statment and has a test for when it is true
+that covers every line, then it would have 100% line coverage.  If there was
+not a test for when it is false, it would only have 50% branch coverage.
+
+4. True.  In order to go through every branch, each line in the branches must
+be covered.  For the situation where there is only a single if statement in 
+the code, if there are tests for when it is true and when it is false as is
+required for 100% branch coverage, then every line inside the statment will 
+be covered for the true branch.  The false branch would then cover the line
+where the if statement is located a second time.
+
+5. False.  Given the example below:
+A. 	If (foo)
+		Do (bar)
+B.	Else
+		Do (baz)
+C.	If (fork)
+		Do (dance)
+
+For 100% branch coverage, tests that go trough each of these statements such
+as 1. foo = true fork = false 2. foo = false fork = false 3. foo = false fork = true will be sufficient.  However, these only go through paths 1. A
+2. B and 3. C.  Paths A-C and B-C are not part of the coverage.
+
+6. A quality test suit should be able to verify that the program behaves
+a certain way for a certain situation.  In the Dealer class, the function
+compareHandAndSettle (cHAS) calls the nextHand function from the Player 
+class before cHAS finishes executing.  The nextHand function sets
+everything for a player that has been changed previously in cHAS to null.
+To get line coverage, the cHAS function must be called, but it is impossible
+to run any tests because Cobertura will not make a report if there are any
+errors such as would be caused by comparing expected results to the null values that are set by nextHand.
+
+7. A test suite built using only domain partitioning uses various values for
+inputs based on which ones are possible and distributing them out in domains.
+It does not take into account paths of the program for path coverage.  Well 
+chosen domains should have values that make conditionals evaluate as true 
+and false for branch coverage.
